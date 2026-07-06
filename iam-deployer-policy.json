@@ -1,0 +1,241 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CloudFormationDeploy",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:CreateStack",
+        "cloudformation:UpdateStack",
+        "cloudformation:DeleteStack",
+        "cloudformation:DescribeStacks",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:GetTemplate",
+        "cloudformation:GetTemplateSummary",
+        "cloudformation:ListStackResources"
+      ],
+      "Resource": "arn:aws:cloudformation:*:*:stack/os-demo-*/*"
+    },
+    {
+      "Sid": "CloudFormationList",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:ListStacks",
+        "cloudformation:GetTemplateSummary"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "IAMRoleManagement",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:GetRole",
+        "iam:PutRolePolicy",
+        "iam:DeleteRolePolicy",
+        "iam:GetRolePolicy",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:PassRole",
+        "iam:TagRole",
+        "iam:ListRoles",
+        "iam:ListRolePolicies",
+        "iam:ListAttachedRolePolicies"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:role/os-demo-*",
+        "arn:aws:iam::*:role/LambdaInvokeOpenSearchMLCommonsRole-*",
+        "arn:aws:iam::*:role/role-os-demo-*",
+        "arn:aws:iam::*:role/SageMakerRole-*",
+        "arn:aws:iam::*:role/HelperLambdaInvokeRole-*"
+      ]
+    },
+    {
+      "Sid": "IAMServiceLinkedRoles",
+      "Effect": "Allow",
+      "Action": "iam:CreateServiceLinkedRole",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "iam:AWSServiceName": [
+            "osis.amazonaws.com",
+            "opensearchservice.amazonaws.com"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "OpenSearchDomain",
+      "Effect": "Allow",
+      "Action": [
+        "es:CreateDomain",
+        "es:DeleteDomain",
+        "es:DescribeDomain",
+        "es:DescribeDomains",
+        "es:DescribeDomainChangeProgress",
+        "es:UpdateDomainConfig",
+        "es:ListTags",
+        "es:AddTags",
+        "es:RemoveTags",
+        "es:ESHttpGet",
+        "es:ESHttpPut",
+        "es:ESHttpPost",
+        "es:ESHttpDelete"
+      ],
+      "Resource": "arn:aws:es:*:*:domain/os-demo-*"
+    },
+    {
+      "Sid": "S3BucketManagement",
+      "Effect": "Allow",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:DeleteBucket",
+        "s3:PutBucketPolicy",
+        "s3:PutEncryptionConfiguration",
+        "s3:PutBucketPublicAccessBlock",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:HeadBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::os-demo-contracts-*",
+        "arn:aws:s3:::os-demo-contracts-*/*",
+        "arn:aws:s3:::opensearch-cfn-semantic-highlighting-*",
+        "arn:aws:s3:::opensearch-cfn-semantic-highlighting-*/*"
+      ]
+    },
+    {
+      "Sid": "LambdaManagement",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:CreateFunction",
+        "lambda:DeleteFunction",
+        "lambda:GetFunction",
+        "lambda:GetFunctionConfiguration",
+        "lambda:UpdateFunctionCode",
+        "lambda:UpdateFunctionConfiguration",
+        "lambda:InvokeFunction",
+        "lambda:AddPermission",
+        "lambda:RemovePermission"
+      ],
+      "Resource": [
+        "arn:aws:lambda:*:*:function:os-demo-*",
+        "arn:aws:lambda:*:*:function:HelperLambda-*",
+        "arn:aws:lambda:*:*:function:SemanticHighlighterConnector-*"
+      ]
+    },
+    {
+      "Sid": "OSIPipeline",
+      "Effect": "Allow",
+      "Action": [
+        "osis:CreatePipeline",
+        "osis:DeletePipeline",
+        "osis:GetPipeline",
+        "osis:UpdatePipeline",
+        "osis:ValidatePipeline",
+        "osis:ListTagsForResource",
+        "osis:TagResource",
+        "osis:UntagResource",
+        "osis:GetResourcePolicy",
+        "osis:PutResourcePolicy",
+        "osis:DeleteResourcePolicy"
+      ],
+      "Resource": "arn:aws:osis:*:*:pipeline/os-demo-*"
+    },
+    {
+      "Sid": "SageMaker",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:CreateModel",
+        "sagemaker:DescribeModel",
+        "sagemaker:DeleteModel",
+        "sagemaker:CreateEndpointConfig",
+        "sagemaker:DescribeEndpointConfig",
+        "sagemaker:DeleteEndpointConfig",
+        "sagemaker:CreateEndpoint",
+        "sagemaker:DeleteEndpoint",
+        "sagemaker:DescribeEndpoint",
+        "sagemaker:InvokeEndpoint",
+        "sagemaker:ListTags",
+        "sagemaker:AddTags"
+      ],
+      "Resource": [
+        "arn:aws:sagemaker:*:*:model/semantic-highlighter-*",
+        "arn:aws:sagemaker:*:*:endpoint/Endpoint-*",
+        "arn:aws:sagemaker:*:*:endpoint-config/semantic-highlighter-*"
+      ]
+    },
+    {
+      "Sid": "BedrockInvoke",
+      "Effect": "Allow",
+      "Action": "bedrock:InvokeModel",
+      "Resource": "arn:aws:bedrock:*::foundation-model/amazon.titan-embed-text-v2:0"
+    },
+    {
+      "Sid": "ECRAuthToken",
+      "Effect": "Allow",
+      "Action": "ecr:GetAuthorizationToken",
+      "Resource": "*"
+    },
+    {
+      "Sid": "ECRPullImages",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage"
+      ],
+      "Resource": "arn:aws:ecr:*:763104351884:repository/pytorch-inference"
+    },
+    {
+      "Sid": "CloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DeleteLogGroup"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:log-group:/aws/lambda/os-demo-*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/os-demo-*:*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/HelperLambda-*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/HelperLambda-*:*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/SemanticHighlighterConnector-*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/SemanticHighlighterConnector-*:*",
+        "arn:aws:logs:*:*:log-group:/aws/sagemaker/*"
+      ]
+    },
+    {
+      "Sid": "STSForScripts",
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::*:role/os-demo-*"
+    },
+    {
+      "Sid": "KMSForEncryptedResources",
+      "Effect": "Allow",
+      "Action": [
+        "kms:CreateGrant",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:ViaService": [
+            "es.us-east-1.amazonaws.com",
+            "s3.us-east-1.amazonaws.com",
+            "sagemaker.us-east-1.amazonaws.com"
+          ]
+        }
+      }
+    }
+  ]
+}

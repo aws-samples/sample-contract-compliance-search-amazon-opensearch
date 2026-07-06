@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contract Compliance Search — Highlight Viewer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#1a1a2e;padding:24px;max-width:960px;margin:0 auto}
+h1{font-size:1.4rem;margin-bottom:4px;color:#232f3e}
+.subtitle{color:#687078;font-size:.85rem;margin-bottom:20px}
+button{padding:10px 20px;background:#0972d3;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.9rem;white-space:nowrap}
+button:hover{background:#065299}
+button.secondary{background:#545b64}
+button.secondary:hover{background:#414750}
+.result{background:#fff;border:1px solid #e9ebed;border-radius:8px;padding:16px;margin-bottom:12px}
+.result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.score{background:#e6f2ff;color:#0972d3;padding:2px 8px;border-radius:12px;font-size:.8rem;font-weight:600}
+.rank{font-weight:600;color:#545b64;font-size:.85rem}
+.content{font-size:.9rem;line-height:1.6;color:#37475a;margin-bottom:10px;padding:10px;background:#fafafa;border-radius:4px;max-height:200px;overflow-y:auto}
+.highlights-label{font-size:.8rem;font-weight:600;color:#545b64;margin-bottom:6px}
+.highlight-fragment{font-size:.88rem;line-height:1.5;padding:8px 10px;background:#fffde7;border-left:3px solid #f9a825;margin-bottom:6px;border-radius:0 4px 4px 0}
+.highlight-fragment em{background:#ffeb3b;padding:1px 3px;border-radius:2px;font-style:normal;font-weight:600}
+.meta{font-size:.8rem;color:#687078;margin-bottom:16px}
+.empty{text-align:center;padding:40px;color:#687078}
+.instructions{background:#fff;border:1px solid #e9ebed;border-radius:8px;padding:16px;margin-bottom:20px;font-size:.85rem;line-height:1.6}
+.instructions h3{font-size:.95rem;margin-bottom:8px}
+.instructions code{background:#f0f2f4;padding:1px 5px;border-radius:3px;font-size:.82rem}
+.instructions ol{padding-left:20px}
+.instructions li{margin-bottom:4px}
+.paste-area{width:100%;font-family:monospace;font-size:.82rem;padding:10px;border:1px solid #d5dbdb;border-radius:6px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<h1>🔍 Contract Compliance Search with Semantic Highlighting</h1>
+<p class="subtitle">Amazon OpenSearch Service + Titan Text Embeddings V2 + SageMaker Highlighting</p>
+
+<div class="instructions">
+<h3>How to use</h3>
+<ol>
+<li>Open <a href="https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions/os-demo-query?tab=testing" target="_blank">Lambda Console → os-demo-query → Test tab</a></li>
+<li>Create a test event: <code>{"query": "data breach notification", "k": 3}</code></li>
+<li>Click <strong>Test</strong> — copy the JSON response from "Execution result"</li>
+<li>Paste it below and click <strong>Load Results</strong></li>
+</ol>
+</div>
+
+<textarea id="pasteArea" class="paste-area" rows="10" placeholder='Paste Lambda JSON response here...'></textarea>
+<button onclick="loadPasted()">Load Results</button>
+
+<div id="results" style="margin-top:20px"><div class="empty">Paste Lambda output above to see results with highlighted fragments</div></div>
+
+<script>
+function loadPasted() {
+  try {
+    const raw = JSON.parse(document.getElementById('pasteArea').value);
+    const body = raw.body || raw;
+    const hits = (body.hits?.hits || []).map(h => ({
+      score: h._score,
+      content: h._source?.content || '',
+      highlights: h.highlight?.content || []
+    }));
+    renderResults(hits);
+  } catch(e) { alert('Invalid JSON: ' + e.message); }
+}
+
+function renderResults(hits) {
+  const el = document.getElementById('results');
+  if (!hits.length) { el.innerHTML = '<div class="empty">No results found</div>'; return; }
+  el.innerHTML = '<div class="meta">' + hits.length + ' results</div>' +
+    hits.map((h, i) => `
+      <div class="result">
+        <div class="result-header">
+          <span class="rank">#${i+1}</span>
+          <span class="score">Score: ${h.score.toFixed(4)}</span>
+        </div>
+        <div class="content">${escHtml(h.content)}</div>
+        ${h.highlights.length ? `
+          <div class="highlights-label">Highlighted Fragments:</div>
+          ${h.highlights.map(f => `<div class="highlight-fragment">${escHtml(f).replace(/&lt;em&gt;/g,'<em>').replace(/&lt;\/em&gt;/g,'</em>')}</div>`).join('')}
+        ` : ''}
+      </div>
+    `).join('');
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
