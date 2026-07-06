@@ -4,7 +4,6 @@
 
 This repository contains CloudFormation templates and supporting scripts for a blog post demo showcasing **semantic search and highlighting** on contract documents using Amazon OpenSearch Service, Amazon Titan V2 embeddings, and a SageMaker-hosted highlighting model.
 
-Pushed for **PCSR (ProServe Content Security Review)** purposes only.
 
 ---
 
