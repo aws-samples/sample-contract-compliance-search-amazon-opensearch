@@ -194,6 +194,6 @@ else:
 "
 
 echo -e "\n=== Script 1 complete! ==="
-echo "Next: Deploy Stack 2 (integrations_stack.yaml) with:"
+echo "Next: Deploy Stack 2 with:"
 echo "  AmazonOpenSearchEndpoint: $DOMAIN_ENDPOINT"
 echo "  LambdaInvokeOpenSearchMLCommonsRoleName: LambdaInvokeOpenSearchMLCommonsRole-$STACK_NAME"
