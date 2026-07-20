@@ -8,7 +8,7 @@ Parameters:
   SourceS3Bucket:
     Type: String
     Default: not-used
-    Description: (Deprecated) Previously used for S3 data source. Data is now loaded from the local repository.
+    Description: Optional S3 source bucket for OSI-based ingestion (production/scale path). The quick-start demo loads sample data directly and leaves this unused
 
 Resources:
 
