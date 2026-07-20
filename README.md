@@ -26,9 +26,8 @@ This repository contains CloudFormation templates and supporting scripts for a b
   | Script                             | Purpose                                                                                                              |
   |------------------------------------|---------------------------------------------------------------------------------------------------------------------|
   | `scripts/create-deployer-role.sh`  | Creates a least-privilege IAM deployer role scoped to `os-demo-*` resources (used by the optional Claude Code path) |
-  | `scripts/generate_synthetic_contracts.py` | Generates the synthetic contract sample data used by the demo                                               |   | `scripts/script_1.sh`              | Post-Stack 1 setup: maps roles, creates the Bedrock Titan V2 connector and embedding model, creates the
-  `embedding-pipeline` and `contracts` index, and indexes `sample-data/contracts.json` |
-  | `scripts/script_2.sh`              | Post-Stack 2 setup: deploys the highlighting model, sets `MODEL_ID` on the query Lambda, and verifies highlighting |
+  | `scripts/generate_synthetic_contracts.py` | Generates the synthetic contract sample data used by the demo                                               |   | `scripts/script_1.sh`              | Post-Stack 1: maps roles, creates the Bedrock Titan V2 connector and embedding model and pipeline,index creation|
+  | `scripts/script_2.sh`              | Post-Stack 2: deploys the highlighting model, sets `MODEL_ID` on the query Lambda, and verifies highlighting |
   | `scripts/test-highlighting.sh`     | Tests semantic highlighting against the deployed endpoint                                                           |
   | `scripts/cleanup.sh`               | Tears down all stacks and resources                                                                                 |
   | `scripts/highlight-viewer.html`    | Local HTML viewer for highlighting results 
