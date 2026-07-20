@@ -1,4 +1,4 @@
-# Contract Compliance Demo — Security Review Package
+# Contract Compliance Demo
 
 ## Purpose
 
