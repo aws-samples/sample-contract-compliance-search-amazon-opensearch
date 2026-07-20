@@ -11,33 +11,33 @@ This repository contains CloudFormation templates and supporting scripts for a b
 
 | Template | Description |
 |----------|-------------|
-| `cfn-templates/neural-search-complete.yaml` | OpenSearch domain, OSI ingestion pipeline, Titan V2 embedding connector, IAM roles, S3 contracts bucket |
-| `cfn-templates/integrations_stack.yaml` | SageMaker endpoint for semantic highlighting model, Lambda helpers for OpenSearch ML Commons connector/model registration, IAM roles |
+| `cfn-templates/os-demo-search.yaml` | OpenSearch domain, OSI ingestion pipeline, Titan V2 embedding connector, IAM roles, S3 contracts bucket |
+| `cfn-templates/os-demo-highlighting.yaml` | SageMaker endpoint for semantic highlighting model, Lambda helpers for OpenSearch ML Commons connector/model registration, IAM roles |
 
 ### Deployment Order
 
-1. **Stack 1** — `neural-search-complete.yaml` (creates OpenSearch domain, S3 bucket, ingestion pipeline)
-2. **Stack 2** — `integrations_stack.yaml` (creates SageMaker endpoint, registers highlighting model in OpenSearch ML Commons)
+1. **Stack 1** — `os-demo-search.yaml` (creates OpenSearch domain, S3 bucket, ingestion pipeline)
+2. **Stack 2** — `os-demo-highlighting.yaml` (creates SageMaker endpoint, registers highlighting model in OpenSearch ML Commons)
 
 ---
 
-## Scripts
-
-| Script | Purpose |
-|--------|---------|
-| `scripts/script_1.sh` | Uploads sample contract data to S3 and triggers OSI ingestion |
-| `scripts/script_2.sh` | Queries OpenSearch to verify ingested data |
-| `scripts/cleanup.sh` | Tears down all stacks and resources |
-| `scripts/test-highlighting.sh` | Tests semantic highlighting against the deployed endpoint |
-| `scripts/highlight-viewer.html` | Local HTML viewer for highlighting results |
+ ## Scripts
+  
+  | Script                             | Purpose                                                                                                              |
+  |------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+  | `scripts/create-deployer-role.sh`  | Creates a least-privilege IAM deployer role scoped to `os-demo-*` resources (used by the optional Claude Code path) |
+  | `scripts/generate_synthetic_contracts.py` | Generates the synthetic contract sample data used by the demo                                               |   | `scripts/script_1.sh`              | Post-Stack 1 setup: maps roles, creates the Bedrock Titan V2 connector and embedding model, creates the
+  `embedding-pipeline` and `contracts` index, and indexes `sample-data/contracts.json` |
+  | `scripts/script_2.sh`              | Post-Stack 2 setup: deploys the highlighting model, sets `MODEL_ID` on the query Lambda, and verifies highlighting |
+  | `scripts/test-highlighting.sh`     | Tests semantic highlighting against the deployed endpoint                                                           |
+  | `scripts/cleanup.sh`               | Tears down all stacks and resources                                                                                 |
+  | `scripts/highlight-viewer.html`    | Local HTML viewer for highlighting results 
 
 ---
 
 ## Sample Data
 
 - `sample-data/contracts.json` — Structured contract metadata
-- `sample-data/cobranding_agreements.json` — Co-branding agreement embeddings
-- `sample-data/affiliate_agreements.json` — Affiliate agreement embeddings
 
 ---
 
